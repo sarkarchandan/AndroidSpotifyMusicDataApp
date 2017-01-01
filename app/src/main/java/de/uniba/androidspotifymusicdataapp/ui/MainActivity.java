@@ -11,13 +11,13 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.uniba.androidspotifymusicdataapp.R;
 import de.uniba.androidspotifymusicdataapp.adapters.CardAdapter;
-import de.uniba.androidspotifymusicdataapp.model.CardData;
-import de.uniba.androidspotifymusicdataapp.model.CardItem;
+import de.uniba.androidspotifymusicdataapp.model.CardAlbum;
 import de.uniba.androidspotifymusicdataapp.model.SpotifyEngine;
 
 public class MainActivity extends AppCompatActivity implements CardAdapter.CardClickCallBack{
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     //Instance variables for the Main Activity.
     private RecyclerView recyclerView;
     private CardAdapter cardAdapter;
-    private List<CardItem> cardItemList;
+    private List<CardAlbum> cardAlbumList;
 
     /**
      * Kickoff the application and request for access token using Spotify Android SDK
@@ -58,21 +58,6 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, request_Code, request);
         logger.info("Authentication Request sent");
-
-
-        //Getting the Data for cards
-        cardItemList = CardData.getDataForCards();
-
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_for_main_activity);
-
-        //Setting the LayoutManager for the RecyclerView
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //Instantiating CardAdapter class using the defined constructor
-        cardAdapter = new CardAdapter(CardData.getDataForCards(),this);
-        //Giving the reference of the Adapter class instance to the RecyclerView
-        recyclerView.setAdapter(cardAdapter);
-        //Giving the reference of the Callback interface to the Card Adapter so that the CallbackInterface methods can be called upon events.
-        cardAdapter.setCardClickCallBack(this);
     }
 
     /**
@@ -91,12 +76,36 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
             logger.info("AuthenticationClient.getResponse() method called for the token");
             if(response.getType()==AuthenticationResponse.Type.TOKEN){
                 accessToken = response.getAccessToken();
-                new SpotifyEngine(response.getAccessToken()).execute();
                 logger.info("Our Access Token: "+accessToken);
             }else{
                 logger.log(Level.SEVERE,"Something went wrong!!!");
             }
         }
+
+        //Getting the Data for cards
+        try {
+           cardAlbumList = new SpotifyEngine(accessToken).execute().get();
+        } catch (InterruptedException e) {
+            logger.info("We have got Interrupted Exception"+e.getMessage());
+        } catch (ExecutionException e) {
+            logger.info("We have got ExecutionException"+e.getMessage());
+        } catch (NullPointerException e){
+            logger.info("We have received NUll List "+e.getMessage());
+        }
+
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_for_main_activity);
+        //Setting the LayoutManager for the RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //Instantiating CardAdapter class using the defined constructor
+        if(cardAlbumList.size() > 0) {
+            cardAdapter = new CardAdapter(cardAlbumList, this);
+        }else{
+            logger.info("We are getting a Null List from the background thread !!!");
+        }
+        //Giving the reference of the Adapter class instance to the RecyclerView
+        recyclerView.setAdapter(cardAdapter);
+        //Giving the reference of the Callback interface to the Card Adapter so that the CallbackInterface methods can be called upon events.
+        cardAdapter.setCardClickCallBack(this);
 
     }
 
@@ -106,18 +115,20 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
      */
     @Override
     public void onCardClick(int position) {
-        CardItem cardItem = (CardItem) cardItemList.get(position);
-        logger.info("Card Item Data on CardClick: "+cardItem.getPersonName());
-        logger.info("Card Item Data on CardClick: "+cardItem.getPersonStatement());
+        CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
+        logger.info("Card Item Data on CardClick: "+cardAlbum.getAlbumName());
+
 
         /**
          * Putting the Data inside a bundle nd sending to the DetailActivity.
          */
+        /*
         Intent intent = new Intent(this,DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_QUOTE,cardItem.getPersonStatement());
         intent.putExtra(BUNDLE_EXTRA,bundle);
         startActivity(intent);
+        */
     }
 
     /**
@@ -127,17 +138,19 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     @Override
     public void onCardButtonClick(int position) {
 
-        CardItem cardItem = (CardItem) cardItemList.get(position);
-        logger.info("Card Item Data on ButtonClick: "+cardItem.getPersonName());
-        logger.info("Card Item Data on ButtonClick: "+cardItem.getPersonStatement());
+        CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
+        logger.info("Card Item Data on CardClick: "+cardAlbum.getAlbumName());
+        
 
         /**
          * Putting the Data inside a bundle nd sending to the DetailActivity.
          */
+        /*
         Intent intent = new Intent(this,DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_QUOTE,cardItem.getPersonStatement());
         intent.putExtra(BUNDLE_EXTRA,bundle);
         startActivity(intent);
+        */
     }
 }

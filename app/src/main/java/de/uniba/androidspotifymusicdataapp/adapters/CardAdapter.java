@@ -9,9 +9,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
+
 import java.util.List;
-import de.uniba.androidspotifymusicdataapp.model.CardItem;
+
+import de.uniba.androidspotifymusicdataapp.custom.RoundRectTransformation;
+import de.uniba.androidspotifymusicdataapp.model.CardAlbum;
 import de.uniba.androidspotifymusicdataapp.R;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 
 /**
@@ -20,18 +27,20 @@ import de.uniba.androidspotifymusicdataapp.R;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder>{
 
-    private List<CardItem> cardItemList;
+    private List<CardAlbum> cardAlbumList;
     private LayoutInflater layoutInflater;
     private CardClickCallBack cardClickCallBack;
+    private Context context;
 
 
     /**
      * Constructor for the Adapter class
-     * @param cardItemList
+     * @param cardAlbumList
      * @param context
      */
-    public CardAdapter(List<CardItem> cardItemList, Context context) {
-        this.cardItemList = cardItemList;
+    public CardAdapter(List<CardAlbum> cardAlbumList, Context context) {
+        this.cardAlbumList = cardAlbumList;
+        this.context = context;
         this.layoutInflater = layoutInflater.from(context);
     }
 
@@ -65,13 +74,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
-        CardItem cardItem = cardItemList.get(position);
-        holder.textView_personNamne.setText(cardItem.getPersonName());
+        CardAlbum cardAlbum = cardAlbumList.get(position);
+        //Experiment Begin
+        Picasso.with(context).setLoggingEnabled(true);
+        Picasso.with(context).load(cardAlbum.getAlbumImageoURL()).transform(new RoundedCornersTransformation(5,5)).into(holder.imageView_Avatar);
+        //Experiment End
+
+        holder.textView_albumName.setText(cardAlbum.getAlbumName());
+        holder.textView_artistName.setText(cardAlbum.getArtistName());
+        holder.button_aboutArtist.setText("About "+cardAlbum.getArtistName());
     }
 
     @Override
     public int getItemCount() {
-        return cardItemList.size();
+        return cardAlbumList.size();
     }
 
 
@@ -79,8 +95,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
 
         private ImageView imageView_Avatar;
-        private TextView textView_personNamne;
-        private Button button_learnMore;
+        private TextView textView_albumName;
+        private TextView textView_artistName;
+        private Button button_aboutArtist;
         private View viewContainer;
 
         /**
@@ -90,17 +107,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         public CardViewHolder(View itemView) {
             super(itemView);
 
-            imageView_Avatar = (ImageView)itemView.findViewById(R.id.imageView_for_photo);
-            textView_personNamne = (TextView)itemView.findViewById(R.id.textView_for_personName);
-            button_learnMore = (Button)itemView.findViewById(R.id.button_for_learn_more);
-            button_learnMore.setOnClickListener(this);
+            imageView_Avatar = (ImageView)itemView.findViewById(R.id.imageView_for_album_photo);
+            textView_albumName = (TextView)itemView.findViewById(R.id.textView_for_album_name);
+            textView_artistName = (TextView)itemView.findViewById(R.id.textView_for_artist_names);
+            button_aboutArtist = (Button)itemView.findViewById(R.id.button_for_about_artist);
+            button_aboutArtist.setOnClickListener(this);
             viewContainer = itemView.findViewById(R.id.container_for_cardview);
             viewContainer.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if(view.getId() == R.id.button_for_learn_more){
+            if(view.getId() == R.id.button_for_about_artist){
                 cardClickCallBack.onCardButtonClick(getAdapterPosition());
             }else{
                 cardClickCallBack.onCardClick(getAdapterPosition());

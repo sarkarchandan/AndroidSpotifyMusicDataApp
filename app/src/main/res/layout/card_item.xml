@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/cardview_element"
         android:layout_gravity="center"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="4dp"
         app:contentPadding="4dp"
         app:cardElevation="4dp"
         card_view:cardUseCompatPadding="true">
@@ -29,31 +29,40 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="156dp"
-                android:background="@android:color/holo_red_light"
-                android:padding="36dp"
-                android:src="@android:drawable/ic_dialog_map"
-                android:tint="#FFFFFF"
-                android:id="@+id/imageView_for_photo"/>
+                android:padding="20dp"
+                android:scaleType="center"
+                android:id="@+id/imageView_for_album_photo"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_for_personName"
-                android:layout_below="@+id/imageView_for_photo"
+                android:id="@+id/textView_for_album_name"
+                android:layout_below="@+id/imageView_for_album_photo"
                 android:paddingLeft="16dp"
                 android:textColor="@android:color/black"
+                android:fontFamily="sans-serif"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="2dp"
+                android:text="Dummy Album"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_for_artist_names"
+                android:layout_below="@+id/textView_for_album_name"
+                android:fontFamily="sans-serif"
+                android:paddingLeft="16dp"
+                android:textStyle="bold"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="56dp"
                 android:background="@android:color/transparent"
-                android:text="Learn More"
-                android:layout_below="@+id/textView_for_personName"
-                android:id="@+id/button_for_learn_more"
+                android:text="About Artist"
+                android:layout_below="@+id/textView_for_artist_names"
+                android:id="@+id/button_for_about_artist"
                 android:textColor="@android:color/holo_red_light"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"

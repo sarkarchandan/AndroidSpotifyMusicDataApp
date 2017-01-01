@@ -10,18 +10,18 @@ public class CardAlbum {
 
     private String albumImageoURL;
     private String albumName;
-    private List<String> artistNames;
+    private String artistName;
 
     /**
      * Constructor for the instance variables.
      * @param albumImageoURL
      * @param albumName
-     * @param artistNames
+     * @param artistName
      */
-    public CardAlbum(String albumImageoURL, String albumName, List<String> artistNames) {
+    public CardAlbum(String albumImageoURL, String albumName, String artistName) {
         this.albumImageoURL = albumImageoURL;
         this.albumName = albumName;
-        this.artistNames = artistNames;
+        this.artistName = artistName;
     }
 
     /**
@@ -39,15 +39,14 @@ public class CardAlbum {
         return albumName;
     }
 
-    public void setAlbumName(String albumName) {
+    public void setAlbumNam(String albumName) {
         this.albumName = albumName;
     }
 
-    public List<String> getArtistNames() {
-        return artistNames;
+    public String getArtistName() {
+        return artistName;
     }
-
-    public void setArtistNames(List<String> artistNames) {
-        this.artistNames = artistNames;
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
     }
 }
