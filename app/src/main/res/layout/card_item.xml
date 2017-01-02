@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/cardview_element"
         android:layout_gravity="center"
-        app:cardCornerRadius="4dp"
         app:contentPadding="4dp"
         app:cardElevation="4dp"
         card_view:cardUseCompatPadding="true">

@@ -36,10 +36,10 @@
                 android:id="@+id/tracks_textView_track_name"
                 />
 
-            <TextView
-                android:text="Dummy Popularity"
+            <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
                 android:id="@+id/tracks_textView_track_popularity"/>
         </LinearLayout>
 

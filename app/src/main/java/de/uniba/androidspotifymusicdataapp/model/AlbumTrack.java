@@ -9,7 +9,7 @@ public class AlbumTrack {
     private String trackId;
     private String trackName;
     private String trackDuration;
-    private int trackPopularity;
+    private float trackPopularity;
 
     /**
      * Constructor for the instance variables
@@ -18,7 +18,7 @@ public class AlbumTrack {
      * @param trackDuration
      * @param trackPopularity
      */
-    public AlbumTrack(String trackId, String trackName, String trackDuration, int trackPopularity) {
+    public AlbumTrack(String trackId, String trackName, String trackDuration, float trackPopularity) {
         this.trackId = trackId;
         this.trackName = trackName;
         this.trackDuration = trackDuration;
@@ -52,11 +52,11 @@ public class AlbumTrack {
         this.trackDuration = trackDuration;
     }
 
-    public int getTrackPopularity() {
+    public float getTrackPopularity() {
         return trackPopularity;
     }
 
-    public void setTrackPopularity(int trackPopularity) {
+    public void setTrackPopularity(float trackPopularity) {
         this.trackPopularity = trackPopularity;
     }
 }

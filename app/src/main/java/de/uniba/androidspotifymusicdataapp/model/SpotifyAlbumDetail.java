@@ -85,7 +85,7 @@ public class SpotifyAlbumDetail extends AsyncTask<Void,Void,List<AlbumTrack>>{
         String trackId=null;
         String trackName = null;
         String trackDuration;
-        int trackPopularity;
+        float trackPopularity;
 
         try {
             SpotifyService spotifyService = getSpotifyService();
@@ -103,7 +103,8 @@ public class SpotifyAlbumDetail extends AsyncTask<Void,Void,List<AlbumTrack>>{
                 trackDuration = minutes+"."+seconds;
                 Track spotifyTrack = spotifyService.getTrack(trackId);
                 logger.info("Track Popularity: " + spotifyTrack.popularity);
-                trackPopularity = spotifyTrack.popularity;
+                trackPopularity = ((float) (spotifyTrack.popularity/100.0)*5);
+                logger.info("Modified Popularity: "+trackPopularity);
                 albumTrackList.add(new AlbumTrack(trackId,trackName,trackDuration,trackPopularity));
             }
         }catch (NullPointerException nP){

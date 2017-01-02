@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -42,7 +43,9 @@ public class AlbumTrackAdapter extends RecyclerView.Adapter<AlbumTrackAdapter.Al
         AlbumTrack albumTrack = albumTrackList.get(position);
         holder.textView_trackName.setText(albumTrack.getTrackName());
         holder.textView_trackDuration.setText(albumTrack.getTrackDuration());
-        holder.textView_trackPopularity.setText(albumTrack.getTrackPopularity()+"");
+        holder.textView_trackPopularity.setNumStars(5);
+        holder.textView_trackPopularity.setStepSize(1);
+        holder.textView_trackPopularity.setRating(albumTrack.getTrackPopularity());
     }
 
     @Override
@@ -57,14 +60,14 @@ public class AlbumTrackAdapter extends RecyclerView.Adapter<AlbumTrackAdapter.Al
 
         private TextView textView_trackName;
         private TextView textView_trackDuration;
-        private TextView textView_trackPopularity;
+        private RatingBar textView_trackPopularity;
         private View container;
 
         public AlbumTracksViewHolder(View itemView) {
             super(itemView);
             textView_trackName = (TextView)itemView.findViewById(R.id.tracks_textView_track_name);
             textView_trackDuration = (TextView)itemView.findViewById(R.id.tracks_textView_track_duration);
-            textView_trackPopularity = (TextView)itemView.findViewById(R.id.tracks_textView_track_popularity);
+            textView_trackPopularity = (RatingBar) itemView.findViewById(R.id.tracks_textView_track_popularity);
             container = itemView.findViewById(R.id.tracks_linearLayout_innerContainer);
         }
     }
