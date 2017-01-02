@@ -77,7 +77,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         CardAlbum cardAlbum = cardAlbumList.get(position);
         //Picasso Experiment Begin
         Picasso.with(context).setLoggingEnabled(true);
-        Picasso.with(context).load(cardAlbum.getAlbumImageURL()).transform(new RoundedCornersTransformation(5,5)).into(holder.imageView_Avatar);
+        Picasso.with(context).load(cardAlbum.getAlbumImageURL()).into(holder.imageView_Avatar);
         //Experiment Experiment End
         holder.textView_albumName.setText(cardAlbum.getAlbumName());
         holder.textView_artistName.setText(cardAlbum.getArtistName());
@@ -114,7 +114,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             textView_artistName = (TextView)itemView.findViewById(R.id.textView_for_artist_names);
             button_aboutArtist = (Button)itemView.findViewById(R.id.button_for_about_artist);
             button_aboutArtist.setOnClickListener(this);
-            viewContainer = itemView.findViewById(R.id.container_for_cardview);
+            viewContainer = itemView.findViewById(R.id.cardview_element);
             viewContainer.setOnClickListener(this);
         }
 
