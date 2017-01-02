@@ -34,14 +34,27 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     //Setting private variable for storing the Access Token
     private static String accessToken;
 
-    //Constants which will be used as keys while passing data from MainActivity to DetailActivity
+    //Constants which will be used as keys while passing data from MainActivity to other Activities.
     private static final String BUNDLE_EXTRA = "BUNDLE_EXTRA";
-    private static final String EXTRA_QUOTE = "EXTRA_QUOTE";
+    private static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
+    private static final String EXTRA_ALBUM_NAME = "EXTRA_ALBUM_NAME";
+    private static final String EXTRA_ALBUM_IMAGE = "EXTRA_ALBUM_IMAGE";
+    private static final String EXTRA_ALBUM_ARTIST_NAME = "EXTRA_ALBUM_ARTIST_NAME";
+    private static final String EXTRA_ALBUM_RELEASE_DATE = "EXTRA_ALBUM_RELEASE_DATE";
+    private static final String EXTRA_SPOTIFY_ACCESS_TOKEN = "EXTRA_SPOTIFY_ACCESS_TOKEN";
 
     //Instance variables for the Main Activity.
     private RecyclerView recyclerView;
     private CardAdapter cardAdapter;
     private List<CardAlbum> cardAlbumList;
+
+    /**
+     * Getter method for the Access Token
+     * @return
+     */
+    public static String getAccessToken() {
+        return accessToken;
+    }
 
     /**
      * Kickoff the application and request for access token using Spotify Android SDK
@@ -86,11 +99,11 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         try {
            cardAlbumList = new SpotifyEngine(accessToken).execute().get();
         } catch (InterruptedException e) {
-            logger.info("We have got Interrupted Exception"+e.getMessage());
+            logger.log(Level.WARNING,"We have got Interrupted Exception"+e.getMessage());
         } catch (ExecutionException e) {
-            logger.info("We have got ExecutionException"+e.getMessage());
+            logger.log(Level.WARNING,"We have got ExecutionException"+e.getMessage());
         } catch (NullPointerException e){
-            logger.info("We have received NUll List "+e.getMessage());
+            logger.log(Level.WARNING,"We have received NUll List "+e.getMessage());
         }
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview_for_main_activity);
@@ -116,19 +129,27 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     @Override
     public void onCardClick(int position) {
         CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
-        logger.info("Card Item Data on CardClick: "+cardAlbum.getAlbumName());
-
-
+        logger.info("Album Id"+cardAlbum.getAlbumId());
+        logger.info("Album Name: "+cardAlbum.getAlbumName());
+        logger.info("Album Artist: "+cardAlbum.getArtistName());
+        logger.info("Album ImageUrl"+cardAlbum.getAlbumImageURL());
+        logger.info("Album Popularity: "+cardAlbum.getAlbumPopularity());
+        logger.info("Album Release Date :"+cardAlbum.getAlbumReleaseDate());
+        logger.info("Spotify Access Token: "+getAccessToken());
         /**
          * Putting the Data inside a bundle nd sending to the DetailActivity.
          */
-        /*
+
         Intent intent = new Intent(this,DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_QUOTE,cardItem.getPersonStatement());
+        bundle.putString(EXTRA_ALBUM_ID,cardAlbum.getAlbumId());
+        bundle.putString(EXTRA_ALBUM_NAME,cardAlbum.getAlbumName());
+        bundle.putString(EXTRA_ALBUM_ARTIST_NAME,cardAlbum.getArtistName());
+        bundle.putString(EXTRA_ALBUM_IMAGE,cardAlbum.getAlbumImageURL());
+        bundle.putString(EXTRA_ALBUM_RELEASE_DATE,cardAlbum.getAlbumReleaseDate());
+        bundle.putString(EXTRA_SPOTIFY_ACCESS_TOKEN,getAccessToken());
         intent.putExtra(BUNDLE_EXTRA,bundle);
         startActivity(intent);
-        */
     }
 
     /**
@@ -139,18 +160,6 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     public void onCardButtonClick(int position) {
 
         CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
-        logger.info("Card Item Data on CardClick: "+cardAlbum.getAlbumName());
-        
-
-        /**
-         * Putting the Data inside a bundle nd sending to the DetailActivity.
-         */
-        /*
-        Intent intent = new Intent(this,DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_QUOTE,cardItem.getPersonStatement());
-        intent.putExtra(BUNDLE_EXTRA,bundle);
-        startActivity(intent);
-        */
+        logger.info("Card Item Data on CardClick: "+cardAlbum.getArtistName());
     }
 }

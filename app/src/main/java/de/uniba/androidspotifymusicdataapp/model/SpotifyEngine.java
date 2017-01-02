@@ -25,7 +25,6 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
     private static final Logger logger = Logger.getLogger(SpotifyEngine.class.getName());
 
     private String accessToken;
-
     private static List<CardAlbum> cardAlbumList;
 
     /**
@@ -88,9 +87,12 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
      */
     public List<CardAlbum> getNewReleasedAlbums(){
         List<CardAlbum> cardAlbumList = new ArrayList<>();
+        String albumId = null;
         String artistName = null;
         String albumImageURL=null;
         String albumName = null;
+        int albumPopularity;
+        String albumReleaseDate;
 
         SpotifyService spotifyService = getSpotifyService();
         if(spotifyService!=null) {
@@ -101,10 +103,13 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
             List<AlbumSimple> albumSimpleList = albumSimplePager.items;
             for (AlbumSimple simpleAlbum : albumSimpleList) {
                 logger.info("Album Name: " + simpleAlbum.name);
+                albumId = simpleAlbum.id;
                 albumName = simpleAlbum.name;
 
                 //Getting the list of Album Artists for CardAlbum
-                Album album = getSpotifyAlbumById(simpleAlbum.id);
+                Album album = getSpotifyAlbumById(albumId);
+                albumPopularity = album.popularity;
+                albumReleaseDate = album.release_date;
                 List<ArtistSimple> simpleArtistList = album.artists;
                 for (ArtistSimple simpleArtist : simpleArtistList) {
                     logger.info("Simple Artist: " + simpleArtist.name);
@@ -123,7 +128,7 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
                 }
                 //Constructing the List of CardAlbumInstances
                 if (simpleAlbum.name != null && albumImageURL != null && artistName !=null) {
-                    cardAlbumList.add(new CardAlbum(albumImageURL, albumName, artistName));
+                    cardAlbumList.add(new CardAlbum(albumId,albumImageURL, albumName, artistName,albumPopularity,albumReleaseDate));
                 }
             }
         }else{

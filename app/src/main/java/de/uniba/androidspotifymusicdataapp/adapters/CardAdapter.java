@@ -75,11 +75,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
         CardAlbum cardAlbum = cardAlbumList.get(position);
-        //Experiment Begin
+        //Picasso Experiment Begin
         Picasso.with(context).setLoggingEnabled(true);
-        Picasso.with(context).load(cardAlbum.getAlbumImageoURL()).transform(new RoundedCornersTransformation(5,5)).into(holder.imageView_Avatar);
-        //Experiment End
-
+        Picasso.with(context).load(cardAlbum.getAlbumImageURL()).transform(new RoundedCornersTransformation(5,5)).into(holder.imageView_Avatar);
+        //Experiment Experiment End
         holder.textView_albumName.setText(cardAlbum.getAlbumName());
         holder.textView_artistName.setText(cardAlbum.getArtistName());
         holder.button_aboutArtist.setText("About "+cardAlbum.getArtistName());
@@ -91,6 +90,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
 
+    /**
+     * Class CardViewHolder is the ViewHolder class for the CardAdapter
+     */
     class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 

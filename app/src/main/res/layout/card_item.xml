@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:id="@+id/container_for_cardview"
-    android:background="#616161">
+    android:background="#9E9E9E">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
