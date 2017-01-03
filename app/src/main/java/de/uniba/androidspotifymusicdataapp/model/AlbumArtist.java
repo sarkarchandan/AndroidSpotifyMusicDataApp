@@ -13,21 +13,25 @@ public class AlbumArtist {
     private String artistImageUrl;
     private List<String> artistGenres;
     private float artistPopularity;
+    private List<ArtistAlbum> artistAlbumList;
+
 
     /**
-     * Constructor for AlbumArtist
+     * Constructor for the AlbumArtist
      * @param artistId
      * @param artistName
      * @param artistImageUrl
      * @param artistGenres
      * @param artistPopularity
+     * @param artistAlbumList
      */
-    public AlbumArtist(String artistId, String artistName, String artistImageUrl, List<String> artistGenres, float artistPopularity) {
+    public AlbumArtist(String artistId, String artistName, String artistImageUrl, List<String> artistGenres, float artistPopularity, List<ArtistAlbum> artistAlbumList) {
         this.artistId = artistId;
         this.artistName = artistName;
         this.artistImageUrl = artistImageUrl;
         this.artistGenres = artistGenres;
         this.artistPopularity = artistPopularity;
+        this.artistAlbumList = artistAlbumList;
     }
 
     /**
@@ -71,5 +75,13 @@ public class AlbumArtist {
 
     public void setArtistPopularity(float artistPopularity) {
         this.artistPopularity = artistPopularity;
+    }
+
+    public List<ArtistAlbum> getArtistAlbumList() {
+        return artistAlbumList;
+    }
+
+    public void setArtistAlbumList(List<ArtistAlbum> artistAlbumList) {
+        this.artistAlbumList = artistAlbumList;
     }
 }

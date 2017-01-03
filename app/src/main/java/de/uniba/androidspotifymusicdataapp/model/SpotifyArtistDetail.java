@@ -9,9 +9,11 @@ import java.util.logging.Logger;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Pager;
 
 /**
  * This class is the helper class for the ArtistActivity and responsible for fetching the artist data from the Spotify Api wrapper
@@ -77,6 +79,8 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
         String artistImageURL=null;
         List<String> artistGenres = new ArrayList<>();
         float artistPopularity;
+        List<ArtistAlbum> listofAlbumsOfArtist = new ArrayList<>();
+        String individualAlbumImageURL=null;
 
         SpotifyService spotifyService = getSpotifyService();
         ArtistSimple simpleArtist = spotifyService.getArtist(getSpotifyArtistId());
@@ -85,13 +89,13 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
 
         Artist artist = spotifyService.getArtist(getSpotifyArtistId());
         List<Image> artistImageList = artist.images;
-        int maxWidth = 0;
+        int maxArtistImageWidth = 0;
         for(Image image:artistImageList){
-            if(image.width > maxWidth)
-                maxWidth = image.width;
+            if(image.width > maxArtistImageWidth)
+                maxArtistImageWidth = image.width;
         }
         for(Image image:artistImageList){
-            if (image.width == maxWidth) {
+            if (image.width == maxArtistImageWidth) {
                 logger.info("Image Width: " + image.width);
                 logger.info("Image Height" + image.height);
                 logger.info("Album Image: " + image.url);
@@ -104,6 +108,33 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
         }
         logger.info("Artist Popularity: "+artist.popularity);
         artistPopularity = ((float) (artist.popularity/100.0)*5);
-        return new AlbumArtist(getSpotifyArtistId(),artistName,artistImageURL,artistGenres,artistPopularity);
+
+        Pager<Album> simpleAlbumPager = spotifyService.getArtistAlbums(getSpotifyArtistId());
+        List<Album> artistAlbumList = simpleAlbumPager.items;
+        for(Album artistAlbum: artistAlbumList){
+            logger.info("Artist Album Id: "+artistAlbum.id);
+
+            Album individualAlbum = spotifyService.getAlbum(artistAlbum.id);
+            logger.info("Artist Album Name: "+individualAlbum.name);
+            logger.info("Artist Album Release Date: "+individualAlbum.release_date);
+            logger.info("Artist Album Popularity: "+individualAlbum.popularity);
+
+            int maxAlbumImageWidth = 0;
+            for(Image albumImage: individualAlbum.images){
+                if(albumImage.width > maxAlbumImageWidth)
+                    maxAlbumImageWidth = albumImage.width;
+            }
+            for (Image albumImage: individualAlbum.images){
+                if(albumImage.width==maxAlbumImageWidth){
+                    logger.info("Image Width: " + albumImage.width);
+                    logger.info("Image Height" + albumImage.height);
+                    logger.info("Album Image: " + albumImage.url);
+                    individualAlbumImageURL = albumImage.url;
+                }
+            }
+            listofAlbumsOfArtist.add(new
+                    ArtistAlbum(artistAlbum.id,individualAlbum.name,individualAlbum.release_date,individualAlbum.popularity,individualAlbumImageURL));
+        }
+        return new AlbumArtist(getSpotifyArtistId(),artistName,artistImageURL,artistGenres,artistPopularity,listofAlbumsOfArtist);
     }
 }
