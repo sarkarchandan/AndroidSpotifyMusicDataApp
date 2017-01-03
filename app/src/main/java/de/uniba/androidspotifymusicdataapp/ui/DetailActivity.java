@@ -1,5 +1,6 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,7 +58,6 @@ public class DetailActivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.textView_album_detail_album_name)).setText(extras.getString(EXTRA_ALBUM_NAME));
             ((TextView)findViewById(R.id.textView_album_detail_artist_name)).setText(extras.getString(EXTRA_ALBUM_ARTIST_NAME));
             ((TextView)findViewById(R.id.textView_album_detail_album_release_date)).setText(extras.getString(EXTRA_ALBUM_RELEASE_DATE));
-
             //Getting the Data for AlbumTracks
             try {
                 albumTrackList = new SpotifyAlbumDetail(extras.getString(EXTRA_ALBUM_ID),

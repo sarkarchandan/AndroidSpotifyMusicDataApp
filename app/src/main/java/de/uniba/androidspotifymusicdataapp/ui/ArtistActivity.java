@@ -1,5 +1,6 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class ArtistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist);
+
 
         Bundle extras = getIntent().getBundleExtra(BUNDLE_EXTRA);
 

@@ -1,5 +1,6 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     private RecyclerView recyclerView;
     private CardAdapter cardAdapter;
     private List<CardAlbum> cardAlbumList;
+    ProgressDialog progressDialog;
 
     /**
      * Getter method for the Access Token
@@ -67,11 +69,20 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         setContentView(R.layout.activity_main);
         logger.setLevel(Level.ALL);
         logger.info("Executing onCreate() method");
+        //Progress Dialogue
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.setInverseBackgroundForced(false);
+        progressDialog.show();
+        logger.info("ProgressBar.show() method triggered !!!");
+
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder
                 (clientId, AuthenticationResponse.Type.TOKEN, redirectUri);
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, request_Code, request);
-        logger.info("Authentication Request sent");
+        logger.info("Authentication Request is sent to Spotify");
     }
 
     /**
@@ -99,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         //Getting the Data for cards
         try {
            cardAlbumList = new SpotifyEngine(accessToken).execute().get();
+            logger.info("Main Activity has triggered AsychTask to fetch the music data.");
         } catch (InterruptedException e) {
             logger.log(Level.WARNING,"We have got Interrupted Exception"+e.getMessage());
         } catch (ExecutionException e) {
@@ -118,9 +130,12 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         }
         //Giving the reference of the Adapter class instance to the RecyclerView
         recyclerView.setAdapter(cardAdapter);
+        logger.info("Adapter has been set to the Main Activity RecyclerView");
         //Giving the reference of the Callback interface to the Card Adapter so that the CallbackInterface methods can be called upon events.
         cardAdapter.setCardClickCallBack(this);
-
+        logger.info("setCardClickCallBack method called to pass on the reference of the main activity.");
+        progressDialog.hide();
+        logger.info("ProgressBar.hide() method triggered !!!");
     }
 
     /**
