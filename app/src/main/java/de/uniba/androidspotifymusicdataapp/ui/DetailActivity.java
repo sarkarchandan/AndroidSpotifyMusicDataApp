@@ -78,7 +78,7 @@ public class DetailActivity extends AppCompatActivity {
             recyclerView.setAdapter(albumTrackAdapter);
 
         }catch (NullPointerException nP){
-            nP.getCause();
+            logger.log(Level.WARNING,"we have encountered NullPointerException"+nP.getMessage());
         }
 
     }

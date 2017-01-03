@@ -79,6 +79,7 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
         String artistImageURL=null;
         List<String> artistGenres = new ArrayList<>();
         float artistPopularity;
+        float artistAlbumPopularity;
         List<ArtistAlbum> listofAlbumsOfArtist = new ArrayList<>();
         String individualAlbumImageURL=null;
 
@@ -118,6 +119,7 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
             logger.info("Artist Album Name: "+individualAlbum.name);
             logger.info("Artist Album Release Date: "+individualAlbum.release_date);
             logger.info("Artist Album Popularity: "+individualAlbum.popularity);
+            artistAlbumPopularity = ((float) (individualAlbum.popularity/100.0)*5);
 
             int maxAlbumImageWidth = 0;
             for(Image albumImage: individualAlbum.images){
@@ -133,7 +135,7 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
                 }
             }
             listofAlbumsOfArtist.add(new
-                    ArtistAlbum(artistAlbum.id,individualAlbum.name,individualAlbum.release_date,individualAlbum.popularity,individualAlbumImageURL));
+                    ArtistAlbum(artistAlbum.id,individualAlbum.name,individualAlbum.release_date,artistAlbumPopularity,individualAlbumImageURL));
         }
         return new AlbumArtist(getSpotifyArtistId(),artistName,artistImageURL,artistGenres,artistPopularity,listofAlbumsOfArtist);
     }

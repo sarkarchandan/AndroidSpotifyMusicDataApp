@@ -15,6 +15,7 @@ import de.uniba.androidspotifymusicdataapp.R;
 import de.uniba.androidspotifymusicdataapp.model.AlbumTrack;
 
 /**
+ * This class serves as the adapter class for displaying the tracks under a selected album
  * Created by chandan on 02/01/2017.
  */
 public class AlbumTrackAdapter extends RecyclerView.Adapter<AlbumTrackAdapter.AlbumTracksViewHolder> {
@@ -32,6 +33,12 @@ public class AlbumTrackAdapter extends RecyclerView.Adapter<AlbumTrackAdapter.Al
         this.layoutInflater = LayoutInflater.from(context);
     }
 
+    /**
+     * Methods to be implemented to bind the RecyclerView with data and inflate
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public AlbumTracksViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.albumtrack_item,parent,false);

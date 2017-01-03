@@ -61,7 +61,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     /**
-     * Need to implement methods
+     * Methods to be implemented to bind the RecyclerView with data and inflate
      * @param parent
      * @param viewType
      * @return
@@ -118,6 +118,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             viewContainer.setOnClickListener(this);
         }
 
+        /**
+         * Overridden onClick method for the MainActivity CardView
+         * @param view
+         */
         @Override
         public void onClick(View view) {
             if(view.getId() == R.id.button_for_about_artist){

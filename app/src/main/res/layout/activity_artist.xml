@@ -43,5 +43,12 @@
         android:layout_below="@+id/textView_artist_detail_artist_genres"
         android:paddingLeft="4dp"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FAFAFA"
+        android:layout_below="@+id/ratingBar_artist_detail_artistPopularity"
+        android:id="@+id/recyclerView_artist_detail_artist_albums">
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
