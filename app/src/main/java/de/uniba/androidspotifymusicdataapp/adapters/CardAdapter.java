@@ -45,7 +45,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     /**
-     * Callback interface
+     * Callback interface for the MainActivity CardView
      */
     public interface CardClickCallBack{
         public void onCardClick(int position);

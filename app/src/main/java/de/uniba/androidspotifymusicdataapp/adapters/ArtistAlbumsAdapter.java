@@ -23,6 +23,7 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
     private List<ArtistAlbum> artistAlbumList;
     private LayoutInflater layoutInflater;
     private Context context;
+    private ItemClickCallBack itemClickCallBack;
 
     /**
      * Constructor for the ArtistAlbumsAdapter
@@ -33,6 +34,21 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
         this.artistAlbumList = artistAlbumList;
         this.context=context;
         this.layoutInflater = layoutInflater.from(context);
+    }
+
+    /**
+     * Callback interface for the ArtistActivity RecyclerView
+     */
+    public interface ItemClickCallBack{
+        public void onItemClick(int position);
+    }
+
+    /**
+     * Setter method for the ItemClickCallBack
+     * @param itemClickCallBack
+     */
+    public void setItemClickCallBack(ItemClickCallBack itemClickCallBack) {
+        this.itemClickCallBack = itemClickCallBack;
     }
 
     /**
@@ -88,7 +104,7 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
             textView_artistAlbumreleaseDate = (TextView)itemView.findViewById(R.id.albums_textView_artist_album_release_date);
             ratingBar_artistAlbumPopularity = (RatingBar)itemView.findViewById(R.id.albums_ratingBar_artist_album_popularity);
             viewContainer = itemView.findViewById(R.id.albums_linearLayout_outermost_container);
-            //TODO viewContainer.setOnClickListener(this);
+            viewContainer.setOnClickListener(this);
         }
 
         /**
@@ -97,7 +113,9 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
          */
         @Override
         public void onClick(View view) {
-            //TODO Implement the method
+            if(view.getId() == R.id.albums_linearLayout_outermost_container){
+                itemClickCallBack.onItemClick(getAdapterPosition());
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,7 @@ import de.uniba.androidspotifymusicdataapp.model.AlbumArtist;
 import de.uniba.androidspotifymusicdataapp.model.ArtistAlbum;
 import de.uniba.androidspotifymusicdataapp.model.SpotifyArtistDetail;
 
-public class ArtistActivity extends AppCompatActivity {
+public class ArtistActivity extends AppCompatActivity implements ArtistAlbumsAdapter.ItemClickCallBack{
 
     //Enabligh default logging at class level
     private static final Logger logger = Logger.getLogger(ArtistActivity.class.getName());
@@ -44,6 +45,15 @@ public class ArtistActivity extends AppCompatActivity {
     private List<ArtistAlbum> artistAlbumList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ArtistAlbumsAdapter artistAlbumsAdapter;
+    private String spotifyAccessToken;
+
+    /**
+     * Getter method required for the onItemClick method
+     * @return
+     */
+    public String getSpotifyAccessToken() {
+        return spotifyAccessToken;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +62,14 @@ public class ArtistActivity extends AppCompatActivity {
 
 
         Bundle extras = getIntent().getBundleExtra(BUNDLE_EXTRA);
-
+        spotifyAccessToken = extras.getString(EXTRA_SPOTIFY_ACCESS_TOKEN);
         try {
-            albumArtist = new SpotifyArtistDetail(extras.getString(EXTRA_SPOTIFY_ACCESS_TOKEN),
+            albumArtist = new SpotifyArtistDetail(spotifyAccessToken,
                     extras.getString(EXTRA_ALBUM_ARTIST_ID)).execute().get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,"We have encountered InterruptedException "+e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,"We have encountered ExecutionException "+e.getMessage());
         }
 
         ImageView artistImage = (ImageView)findViewById(R.id.imageView_artist_detail_image);
@@ -82,9 +92,36 @@ public class ArtistActivity extends AppCompatActivity {
                 artistAlbumsAdapter = new ArtistAlbumsAdapter(artistAlbumList, this);
             }
             recyclerView.setAdapter(artistAlbumsAdapter);
+            artistAlbumsAdapter.setItemClickCallBack(this);
         }catch (NullPointerException nP){
             logger.log(Level.WARNING,"We have encountered NullPointerException"+nP.getMessage());
         }
 
+    }
+
+    /**
+     * Implementation for the onItemClick method
+     * @param position
+     */
+    @Override
+    public void onItemClick(int position) {
+        ArtistAlbum eachSingleArtistAlbum = (ArtistAlbum) artistAlbumList.get(position);
+        logger.info("OnItemClick Album Id: "+eachSingleArtistAlbum.getArtistAlbumId());
+        logger.info("OnItemClick Album Name"+eachSingleArtistAlbum.getArtistAlbumName());
+        logger.info("OnItemClick Album ImageURL: "+eachSingleArtistAlbum.getArtistAlbumImageURL());
+        logger.info("OnItemClick Album Artist Name: "+albumArtist.getArtistName());
+        logger.info("OnItemClick Album Release Date: "+eachSingleArtistAlbum.getArtistAlbumReleaseDate());
+        logger.info("Access Token: "+getSpotifyAccessToken());
+
+        Intent intent = new Intent(this,DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_ALBUM_ID,eachSingleArtistAlbum.getArtistAlbumId());
+        bundle.putString(EXTRA_ALBUM_NAME,eachSingleArtistAlbum.getArtistAlbumName());
+        bundle.putString(EXTRA_ALBUM_IMAGE,eachSingleArtistAlbum.getArtistAlbumImageURL());
+        bundle.putString(EXTRA_ALBUM_ARTIST_NAME,albumArtist.getArtistName());
+        bundle.putString(EXTRA_ALBUM_RELEASE_DATE,eachSingleArtistAlbum.getArtistAlbumReleaseDate());
+        bundle.putString(EXTRA_SPOTIFY_ACCESS_TOKEN,getSpotifyAccessToken());
+        intent.putExtra(BUNDLE_EXTRA,bundle);
+        startActivity(intent);
     }
 }
