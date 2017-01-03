@@ -2,53 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:gravity="center_vertical|left"
     android:id="@+id/albums_linearLayout_outermost_container">
 
     <ImageView
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/albums_imageView_artist_album_image"/>
-
+        android:layout_height="match_parent"
+        android:id="@+id/albums_imageView_artist_album_image" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="170dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/albums_linearLayout_second_inner_container">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:text="Dummy Album Name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:id="@+id/albums_linearLayout_innermost_container">
-
-            <TextView
-                android:text="Dummy Album Name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/albums_textView_artist_album_name"/>
-
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/ratingBarStyleSmall"
-                android:id="@+id/albums_textView_artist_album_popularity"/>
-
-
-        </LinearLayout>
+            android:id="@+id/albums_textView_artist_album_name"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"/>
 
         <TextView
             android:text="Dummy release date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/albums_textView_artist_album_release_date"/>
+            android:id="@+id/albums_textView_artist_album_release_date"
+            android:paddingLeft="4dp"/>
 
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/ratingBarStyleSmall"
+            android:id="@+id/albums_ratingBar_artist_album_popularity"/>
     </LinearLayout>
 
 </LinearLayout>

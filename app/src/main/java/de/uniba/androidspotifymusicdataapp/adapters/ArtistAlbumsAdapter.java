@@ -86,7 +86,7 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
             imageView_artistAlbumImage = (ImageView)itemView.findViewById(R.id.albums_imageView_artist_album_image);
             textView_artistAlbumName = (TextView)itemView.findViewById(R.id.albums_textView_artist_album_name);
             textView_artistAlbumreleaseDate = (TextView)itemView.findViewById(R.id.albums_textView_artist_album_release_date);
-            ratingBar_artistAlbumPopularity = (RatingBar)itemView.findViewById(R.id.albums_textView_artist_album_popularity);
+            ratingBar_artistAlbumPopularity = (RatingBar)itemView.findViewById(R.id.albums_ratingBar_artist_album_popularity);
             viewContainer = itemView.findViewById(R.id.albums_linearLayout_outermost_container);
             //TODO viewContainer.setOnClickListener(this);
         }
