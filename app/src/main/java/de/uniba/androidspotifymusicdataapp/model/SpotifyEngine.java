@@ -88,6 +88,7 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
     public List<CardAlbum> getNewReleasedAlbums(){
         List<CardAlbum> cardAlbumList = new ArrayList<>();
         String albumId = null;
+        String artistId = null;
         String artistName = null;
         String albumImageURL=null;
         String albumName = null;
@@ -102,24 +103,34 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
             //Getting the Album Name for CardAlbum
             List<AlbumSimple> albumSimpleList = albumSimplePager.items;
             for (AlbumSimple simpleAlbum : albumSimpleList) {
+                logger.info("Album Id :"+simpleAlbum.id);
                 logger.info("Album Name: " + simpleAlbum.name);
                 albumId = simpleAlbum.id;
                 albumName = simpleAlbum.name;
 
                 //Getting the list of Album Artists for CardAlbum
                 Album album = getSpotifyAlbumById(albumId);
+                logger.info("Album Popularity: "+album.popularity);
                 albumPopularity = album.popularity;
+                logger.info("Album Release Date: "+album.release_date);
                 albumReleaseDate = album.release_date;
                 List<ArtistSimple> simpleArtistList = album.artists;
                 for (ArtistSimple simpleArtist : simpleArtistList) {
-                    logger.info("Simple Artist: " + simpleArtist.name);
+                    logger.info("Simple Artist Id: "+simpleArtist.id);
+                    logger.info("Simple Artist Name: " + simpleArtist.name);
+                    artistId = simpleArtist.id;
                     artistName = simpleArtist.name;
                 }
 
                 //Getting the Album Image for CardAlbum
                 List<Image> albumImages = simpleAlbum.images;
+                int maxWidth = 0;
                 for (Image albumImage : albumImages) {
-                    if (albumImage.width > 600) {
+                    if(albumImage.width > maxWidth)
+                        maxWidth = albumImage.width;
+                }
+                for(Image albumImage : albumImages){
+                    if (albumImage.width == maxWidth) {
                         logger.info("Image Width: " + albumImage.width);
                         logger.info("Image Height" + albumImage.height);
                         logger.info("Album Image: " + albumImage.url);
@@ -128,7 +139,7 @@ public class SpotifyEngine extends AsyncTask<Void,Void,List<CardAlbum>>{
                 }
                 //Constructing the List of CardAlbumInstances
                 if (simpleAlbum.name != null && albumImageURL != null && artistName !=null) {
-                    cardAlbumList.add(new CardAlbum(albumId,albumImageURL, albumName, artistName,albumPopularity,albumReleaseDate));
+                    cardAlbumList.add(new CardAlbum(albumId,albumName,artistId,artistName,albumImageURL,albumPopularity,albumReleaseDate));
                 }
             }
         }else{

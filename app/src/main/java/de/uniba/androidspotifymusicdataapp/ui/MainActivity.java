@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     private static final String EXTRA_ALBUM_ARTIST_NAME = "EXTRA_ALBUM_ARTIST_NAME";
     private static final String EXTRA_ALBUM_RELEASE_DATE = "EXTRA_ALBUM_RELEASE_DATE";
     private static final String EXTRA_SPOTIFY_ACCESS_TOKEN = "EXTRA_SPOTIFY_ACCESS_TOKEN";
+    private static final String EXTRA_ALBUM_ARTIST_ID = "EXTRA_ARTIST_ID";
 
     //Instance variables for the Main Activity.
     private RecyclerView recyclerView;
@@ -131,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
         logger.info("Album Id"+cardAlbum.getAlbumId());
         logger.info("Album Name: "+cardAlbum.getAlbumName());
-        logger.info("Album Artist: "+cardAlbum.getArtistName());
+        logger.info("Album Artist Id: "+cardAlbum.getArtistId());
+        logger.info("Album Artist Name: "+cardAlbum.getArtistName());
         logger.info("Album ImageUrl"+cardAlbum.getAlbumImageURL());
         logger.info("Album Popularity: "+cardAlbum.getAlbumPopularity());
         logger.info("Album Release Date :"+cardAlbum.getAlbumReleaseDate());
@@ -160,6 +162,15 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     public void onCardButtonClick(int position) {
 
         CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
-        logger.info("Card Item Data on CardClick: "+cardAlbum.getArtistName());
+        logger.info("Artist Id: "+cardAlbum.getArtistId());
+        logger.info("Artist Name: "+cardAlbum.getArtistName());
+
+        Intent intent = new Intent(this,ArtistActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_ALBUM_ARTIST_ID,cardAlbum.getArtistId());
+        bundle.putString(EXTRA_ALBUM_ARTIST_NAME,cardAlbum.getArtistName());
+        bundle.putString(EXTRA_SPOTIFY_ACCESS_TOKEN,getAccessToken());
+        intent.putExtra(BUNDLE_EXTRA,bundle);
+        startActivity(intent);
     }
 }

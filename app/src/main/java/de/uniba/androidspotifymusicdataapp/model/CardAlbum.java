@@ -9,9 +9,10 @@ import java.util.List;
 public class CardAlbum {
 
     private String albumId;
-    private String albumImageURL;
     private String albumName;
+    private String artistId;
     private String artistName;
+    private String albumImageURL;
     private int albumPopularity;
     private String albumReleaseDate;
 
@@ -22,11 +23,12 @@ public class CardAlbum {
      * @param albumName
      * @param artistName
      */
-    public CardAlbum(String albumId, String albumImageURL, String albumName, String artistName, int albumPopularity, String albumReleaseDate) {
+    public CardAlbum(String albumId, String albumName, String artistId, String artistName, String albumImageURL, int albumPopularity, String albumReleaseDate) {
         this.albumId = albumId;
-        this.albumImageURL = albumImageURL;
         this.albumName = albumName;
+        this.artistId = artistId;
         this.artistName = artistName;
+        this.albumImageURL = albumImageURL;
         this.albumPopularity = albumPopularity;
         this.albumReleaseDate = albumReleaseDate;
     }
@@ -48,6 +50,14 @@ public class CardAlbum {
 
     public void setAlbumImageURL(String albumImageURL) {
         this.albumImageURL = albumImageURL;
+    }
+
+    public String getArtistId() {
+        return artistId;
+    }
+
+    public void setArtistId(String artistId) {
+        this.artistId = artistId;
     }
 
     public String getAlbumName() {
