@@ -30,6 +30,16 @@ gradle build - To build the current project and prepare the apk file.
 ```
 ## Sample Execution
 #### Following are some snapshots taken from the application.
+##### 1. Handling Authentication with Spotify native client.
+##### 2. Sample New Release main activity screen with CardView.
+##### 3. Sample new Release main activity screen with CardView.
+##### 4. Sample Album activity screen tapped from the cardview inflated with underlying tracks of the album.
+##### 5. Sample Album activity screen tapped from the cardview inflated with underlying tracks of the album.
+##### 6. Sample Artist  activity screen tapped on the flat button inflated with albums of the selected artist.
+##### 7. Sample Artist  activity screen tapped on the flat button inflated with albums of the selected artist.
+##### 8. Sample Artist  activity screen tapped on the flat button inflated with albums of the selected artist.
+##### 9. Sample inflated Album randomly chosen and tapped from the list of albums of a specific artist.
+##### 10. Sample inflated Album randomly chosen and tapped from the list of albums of a specific artist.
 <img src="https://cloud.githubusercontent.com/assets/19269229/21650600/c5fe52ba-d2a5-11e6-87b7-5d73081d5d93.png" alt="Authentication with native Spotify clicent" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21650969/102dc054-d2a7-11e6-89f0-7a0b4ebcb163.png" alt="New releases cardview" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651104/af2c7592-d2a7-11e6-9dbe-7245c48cfbe3.png" alt="New released album cardview" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651183/f59f9dd8-d2a7-11e6-9202-747524d039e7.png" alt="new released album inflated" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651225/206bd40a-d2a8-11e6-9e12-3306c14c370f.png" alt="new released album inflated" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651261/3c048252-d2a8-11e6-9571-1c93702c9cf3.png" alt="artist inflated" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651285/5a5bbbc6-d2a8-11e6-8cf4-87abddc641b9.png" alt="artist inflated" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651419/d22fcf3e-d2a8-11e6-9e0a-f6a5ee2ffa03.png" alt="artist inflated" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651484/10cddda8-d2a9-11e6-94db-24cf39061c04.png" alt="artist album inflated" width="150" height="300"> <img src="https://cloud.githubusercontent.com/assets/19269229/21651513/2b61a3fc-d2a9-11e6-9aa2-69dc6792aeba.png" alt="artist album inflated" width="150" height="300"> 
 
 ## Known Issues
