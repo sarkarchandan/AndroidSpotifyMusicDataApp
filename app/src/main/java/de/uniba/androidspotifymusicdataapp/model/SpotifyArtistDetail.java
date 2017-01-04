@@ -77,7 +77,8 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
 
         String artistName = null;
         String artistImageURL=null;
-        List<String> artistGenres = new ArrayList<>();
+        List<String> listedArtistGenres = new ArrayList<>();
+        List<String> finalArtistGenres = new ArrayList<>();
         float artistPopularity;
         float artistAlbumPopularity;
         List<ArtistAlbum> listofAlbumsOfArtist = new ArrayList<>();
@@ -105,7 +106,13 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
         }
         for(String genre: artist.genres){
             logger.info("Artist Genre: "+genre);
-            artistGenres.add(genre);
+            listedArtistGenres.add(genre);
+        }
+        //Reducing the Artist Genres is favor of the displaying in the UI
+        if(listedArtistGenres.size() > 3){
+            finalArtistGenres = listedArtistGenres.subList(0,2);
+        }else{
+            finalArtistGenres = listedArtistGenres;
         }
         logger.info("Artist Popularity: "+artist.popularity);
         artistPopularity = ((float) (artist.popularity/100.0)*5);
@@ -137,6 +144,6 @@ public class SpotifyArtistDetail extends AsyncTask<Void,Void,AlbumArtist>{
             listofAlbumsOfArtist.add(new
                     ArtistAlbum(artistAlbum.id,individualAlbum.name,individualAlbum.release_date,artistAlbumPopularity,individualAlbumImageURL));
         }
-        return new AlbumArtist(getSpotifyArtistId(),artistName,artistImageURL,artistGenres,artistPopularity,listofAlbumsOfArtist);
+        return new AlbumArtist(getSpotifyArtistId(),artistName,artistImageURL,finalArtistGenres,artistPopularity,listofAlbumsOfArtist);
     }
 }

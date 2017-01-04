@@ -9,7 +9,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="260dp"
         android:scaleType="centerCrop"
         android:background="@android:color/darker_gray"
         android:id="@+id/imageView_artist_detail_image"/>
@@ -21,7 +21,8 @@
         android:id="@+id/textView_artist_detail_artistName"
         android:layout_below="@+id/imageView_artist_detail_image"
         android:fontFamily="sans-serif"
-        android:textColor="@android:color/white"
+        android:textColor="#E0E0E0"
+        android:elevation="14dp"
         android:textSize="34sp"
         android:paddingLeft="4dp"/>
 
@@ -32,6 +33,7 @@
         android:layout_below="@+id/textView_artist_detail_artistName"
         android:fontFamily="sans-serif"
         android:textColor="@android:color/white"
+        android:elevation="14dp"
         android:textSize="14sp"
         android:paddingLeft="4dp"
         android:paddingBottom="4dp"/>
@@ -41,11 +43,12 @@
         android:layout_height="wrap_content"
         style="?android:attr/ratingBarStyleSmall"
         android:id="@+id/ratingBar_artist_detail_artistPopularity"
-        android:layout_alignTop="@+id/textView_artist_detail_artistName"
+        android:layout_alignRight="@+id/textView_artist_detail_artistName"
+        android:layout_below="@+id/imageView_artist_detail_image"
         android:layout_alignParentRight="true"
         android:paddingLeft="4dp"
-        android:paddingTop="2dp"
-        android:layout_marginRight="12dp"/>
+        android:paddingTop="10dp"
+        android:layout_marginRight="13dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
