@@ -22,7 +22,7 @@
 - Find more dynamic solution for handling the authentication compared to what currently being used.
 
 ## Build and Deploy
-#### This project has been created with Android Studio version 2.2.3 and cradle has been used as the default build system. Application packages will be installed to the device or emulator with the help of Android Debug Bridge tools. 
+#### This project has been created with Android Studio version 2.2.3 and gradle has been used as the default build system. Application packages will be installed to the device or emulator with the help of Android Debug Bridge tools. 
 ```
 git clone git@github.com:sarkarchandan/AndroidSpotifyMusicDataApp.git - To clone the project from the GitHub repository.
 gradle clean - To clean the project and the previous build files if any.
