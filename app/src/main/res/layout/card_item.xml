@@ -6,7 +6,6 @@
     android:id="@+id/cardview_element"
     android:layout_gravity="center"
     android:layout_margin="4dp"
-    app:cardCornerRadius="4dp"
     android:elevation="20dp">
 
         <RelativeLayout
@@ -28,6 +27,7 @@
                 android:layout_below="@+id/imageView_for_album_photo"
                 android:paddingLeft="8dp"
                 android:fontFamily="sans-serif"
+                android:textColor="#424242"
                 android:elevation="14dp"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -41,6 +41,7 @@
                 android:id="@+id/textView_for_artist_names"
                 android:layout_below="@+id/textView_for_album_name"
                 android:fontFamily="sans-serif"
+                android:textColor="#424242"
                 android:elevation="14dp"
                 android:paddingLeft="8dp"
                 android:textStyle="bold"/>
@@ -52,7 +53,7 @@
                 android:text="About Artist"
                 android:layout_below="@+id/textView_for_artist_names"
                 android:id="@+id/button_for_about_artist"
-                android:textColor="@android:color/holo_red_light"
+                android:textColor="@color/colorAccent"
                 android:paddingLeft="8dp"
                 android:paddingRight="16dp"
                 android:paddingTop="4dp"

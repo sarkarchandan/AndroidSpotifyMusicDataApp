@@ -9,7 +9,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="350dp"
             android:scaleType="centerCrop"
             android:background="@android:color/darker_gray"
             android:id="@+id/imageView_album_detail_image"/>
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView_album_detail_artist_name"
-            android:layout_below="@+id/textView_album_detail_album_name"
+            android:layout_above="@+id/textView_album_detail_album_release_date"
             android:fontFamily="sans-serif"
             android:textColor="#FAFAFA"
             android:elevation="14dp"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:id="@+id/textView_album_detail_album_name"
-            android:layout_below="@+id/imageView_album_detail_image"
+            android:layout_above="@+id/textView_album_detail_artist_name"
             android:fontFamily="sans-serif"
             android:textColor="#FAFAFA"
             android:elevation="14dp"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:id="@+id/textView_album_detail_album_release_date"
-            android:layout_below="@+id/textView_album_detail_artist_name"
+            android:layout_alignBottom="@+id/imageView_album_detail_image"
             android:textColor="#FAFAFA"
             android:elevation="14dp"
             android:fontFamily="sans-serif"
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView_for_detail_activity_track_details"
-            android:layout_below="@+id/textView_album_detail_album_release_date"
+            android:layout_below="@+id/imageView_album_detail_image"
             android:background="#FAFAFA">
         </android.support.v7.widget.RecyclerView>
 

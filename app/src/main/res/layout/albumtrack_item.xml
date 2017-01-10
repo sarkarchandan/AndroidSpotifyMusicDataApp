@@ -29,6 +29,7 @@
 
             <TextView
                 android:text="Dummy Track Name"
+                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|left"
@@ -40,11 +41,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="?android:attr/ratingBarStyleSmall"
+                android:visibility="visible"
                 android:id="@+id/tracks_textView_track_popularity"/>
         </LinearLayout>
 
         <TextView
             android:text="Dummy Duration"
+            android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"

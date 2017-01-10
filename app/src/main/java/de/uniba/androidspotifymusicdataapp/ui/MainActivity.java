@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Window;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     private CardAdapter cardAdapter;
     private List<CardAlbum> cardAlbumList;
     ProgressDialog progressDialog;
+    private Toolbar toolbar;
 
     /**
      * Getter method for the Access Token
@@ -69,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         setContentView(R.layout.activity_main);
         logger.setLevel(Level.ALL);
         logger.info("Executing onCreate() method");
+        Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
         //Progress Dialogue
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

@@ -18,6 +18,7 @@
 
         <TextView
             android:text="Dummy Album Name"
+            android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/albums_textView_artist_album_name"
@@ -26,6 +27,7 @@
 
         <TextView
             android:text="Dummy release date"
+            android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/albums_textView_artist_album_release_date"
@@ -43,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="?android:attr/ratingBarStyleSmall"
+            android:visibility="visible"
             android:id="@+id/albums_ratingBar_artist_album_popularity"/>
     </LinearLayout>
 
