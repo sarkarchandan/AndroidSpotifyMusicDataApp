@@ -20,6 +20,9 @@
 - Enable music streaming on the application.
 - Enable standalone look up functionality for artists, albums and tracks.
 - Find more dynamic solution for handling the authentication compared to what currently being used.
+- Add Dynamic Programming startegy and reduce network operations. it will add to the efficeincy.
+- Apply Responsive Design construct to ensure that the app can adapt to different screen size and devices.
+- Review the layouts and views used in the app and consider if more simpler approach could be used.
 
 ## Build and Deploy
 #### This project has been created with Android Studio version 2.2.3 and gradle has been used as the default build system. Application packages will be installed to the device or emulator with the help of Android Debug Bridge tools. 
