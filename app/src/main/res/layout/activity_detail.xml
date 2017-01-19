@@ -7,6 +7,14 @@
         android:background="#424242"
         tools:context="de.uniba.androidspotifymusicdataapp.ui.DetailActivity">
 
+        <ProgressBar
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:id="@+id/load_detailactivity"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="invisible"/>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="350dp"

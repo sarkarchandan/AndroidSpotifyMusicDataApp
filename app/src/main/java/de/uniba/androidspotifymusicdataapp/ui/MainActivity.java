@@ -1,32 +1,37 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Window;
-
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import de.uniba.androidspotifymusicdataapp.R;
 import de.uniba.androidspotifymusicdataapp.adapters.CardAdapter;
 import de.uniba.androidspotifymusicdataapp.model.CardAlbum;
-import de.uniba.androidspotifymusicdataapp.model.SpotifyEngine;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.AlbumSimple;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.NewReleases;
+import kaaes.spotify.webapi.android.models.Pager;
 
 public class MainActivity extends AppCompatActivity implements CardAdapter.CardClickCallBack{
-
-    //Enabling default logging at class level.
-    private static final Logger logger = Logger.getLogger(MainActivity.class.getName());
 
     //Setting the Client ID for authentication.
     private static final String clientId = "973f03d1cf7b412eabf015fa6fa66b23";
@@ -50,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     //Instance variables for the Main Activity.
     private RecyclerView recyclerView;
     private CardAdapter cardAdapter;
-    private List<CardAlbum> cardAlbumList;
-    ProgressDialog progressDialog;
-    private Toolbar toolbar;
+    private List<CardAlbum> cardAlbumListData;
+    private ProgressBar loadMainActivity;
+
 
     /**
      * Getter method for the Access Token
@@ -70,24 +75,11 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        logger.setLevel(Level.ALL);
-        logger.info("Executing onCreate() method");
-        Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        //Progress Dialogue
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
-        progressDialog.setInverseBackgroundForced(false);
-        progressDialog.show();
-        logger.info("ProgressBar.show() method triggered !!!");
-
+        loadMainActivity = (ProgressBar) findViewById(R.id.load_mainactivity);
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder
                 (clientId, AuthenticationResponse.Type.TOKEN, redirectUri);
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, request_Code, request);
-        logger.info("Authentication Request is sent to Spotify");
     }
 
     /**
@@ -99,31 +91,22 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        logger.setLevel(Level.ALL);
-        logger.info("Executing onActivityResult() method");
         if(requestCode==request_Code){
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode,data);
-            logger.info("AuthenticationClient.getResponse() method called for the token");
             if(response.getType()==AuthenticationResponse.Type.TOKEN){
                 accessToken = response.getAccessToken();
-                logger.info("Our Access Token: "+accessToken);
             }else{
-                logger.log(Level.SEVERE,"Something went wrong!!!");
             }
         }
+        new SpotifyNewRelease(accessToken).execute();
+    }
 
-        //Getting the Data for cards
-        try {
-           cardAlbumList = new SpotifyEngine(accessToken).execute().get();
-            logger.info("Main Activity has triggered AsychTask to fetch the music data.");
-        } catch (InterruptedException e) {
-            logger.log(Level.WARNING,"We have got Interrupted Exception"+e.getMessage());
-        } catch (ExecutionException e) {
-            logger.log(Level.WARNING,"We have got ExecutionException"+e.getMessage());
-        } catch (NullPointerException e){
-            logger.log(Level.WARNING,"We have received NUll List "+e.getMessage());
-        }
-
+    /**
+     * Set the adapter for the MainActivity RecyclerView with data.
+     * @param cardAlbumList
+     */
+    public void loadSpotifyNewReleaseData(List<CardAlbum> cardAlbumList){
+        loadMainActivity.setVisibility(View.INVISIBLE);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview_for_main_activity);
         //Setting the LayoutManager for the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -131,16 +114,41 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         if(cardAlbumList.size() > 0) {
             cardAdapter = new CardAdapter(cardAlbumList, this);
         }else{
-            logger.info("We are getting a Null List from the background thread !!!");
+            Log.d("NULLList","We are getting a Null List from the background thread !!!");
         }
         //Giving the reference of the Adapter class instance to the RecyclerView
         recyclerView.setAdapter(cardAdapter);
-        logger.info("Adapter has been set to the Main Activity RecyclerView");
         //Giving the reference of the Callback interface to the Card Adapter so that the CallbackInterface methods can be called upon events.
         cardAdapter.setCardClickCallBack(this);
-        logger.info("setCardClickCallBack method called to pass on the reference of the main activity.");
-        progressDialog.hide();
-        logger.info("ProgressBar.hide() method triggered !!!");
+        Toast.makeText(MainActivity.this,"New Releases from Spotify",Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Inflates the overflow menu at the toolbar
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mainactivity_toolbar_overflowmenu,menu);
+        return true;
+    }
+
+    /**
+     * Provides dummy implementation for the MainActivity overflow menu at the toolbar
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int selectedItmId = item.getItemId();
+        Context context = MainActivity.this;
+        if(selectedItmId == R.id.item_action_refresh){
+            loadSpotifyNewReleaseData(cardAlbumListData);
+            return true;
+        }else{
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -149,15 +157,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
      */
     @Override
     public void onCardClick(int position) {
-        CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
-        logger.info("Album Id"+cardAlbum.getAlbumId());
-        logger.info("Album Name: "+cardAlbum.getAlbumName());
-        logger.info("Album Artist Id: "+cardAlbum.getArtistId());
-        logger.info("Album Artist Name: "+cardAlbum.getArtistName());
-        logger.info("Album ImageUrl"+cardAlbum.getAlbumImageURL());
-        logger.info("Album Popularity: "+cardAlbum.getAlbumPopularity());
-        logger.info("Album Release Date :"+cardAlbum.getAlbumReleaseDate());
-        logger.info("Spotify Access Token: "+getAccessToken());
+        CardAlbum cardAlbum = cardAlbumListData.get(position);
         /**
          * Putting the Data inside a bundle nd sending to the DetailActivity.
          */
@@ -181,10 +181,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     @Override
     public void onCardButtonClick(int position) {
 
-        CardAlbum cardAlbum = (CardAlbum) cardAlbumList.get(position);
-        logger.info("Artist Id: "+cardAlbum.getArtistId());
-        logger.info("Artist Name: "+cardAlbum.getArtistName());
-
+        CardAlbum cardAlbum = cardAlbumListData.get(position);
         Intent intent = new Intent(this,ArtistActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_ALBUM_ARTIST_ID,cardAlbum.getArtistId());
@@ -192,5 +189,136 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         bundle.putString(EXTRA_SPOTIFY_ACCESS_TOKEN,getAccessToken());
         intent.putExtra(BUNDLE_EXTRA,bundle);
         startActivity(intent);
+    }
+
+    /**
+     * Class SpotifyNewRelease is responsible for performing the background task for the MainActivity.
+     * We instantiate this class passing the Spotify Access Token to the constructor.
+     * The access token than is used by the background task to generate the new release album list from spotify.
+     */
+    public class SpotifyNewRelease extends AsyncTask<Void,Void,List<CardAlbum>>{
+        private String accessToken;
+        private List<CardAlbum> cardAlbumList;
+
+        /**
+         * Constructor for SpotifyNewRelease
+         * @param accessToken
+         */
+        public SpotifyNewRelease(String accessToken) {
+            this.accessToken = accessToken;
+        }
+
+        /**
+         * Getter method for the accessToken
+         * @return
+         */
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadMainActivity.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected List<CardAlbum> doInBackground(Void... voids) {
+            cardAlbumList = getNewReleasedAlbums();
+            return cardAlbumList;
+        }
+
+        @Override
+        protected void onPostExecute(List<CardAlbum> cardAlbumList) {
+            super.onPostExecute(cardAlbumList);
+            cardAlbumListData = cardAlbumList;
+            loadSpotifyNewReleaseData(cardAlbumList);
+        }
+
+        /**
+         * Returns an instance of the Spotify Service
+         * @return spotifyService
+         */
+        public SpotifyService getSpotifyService(){
+            //Creates and configures a REST adapter for Spotify Web API.
+            SpotifyApi wrapper = new SpotifyApi();
+            if(!getAccessToken().equals("") && getAccessToken()!=null) {
+                wrapper.setAccessToken(getAccessToken());
+            }else{
+                Log.d("SpotifyNewRelease","Invalid Access Token");
+            }
+            SpotifyService spotifyService = wrapper.getService();
+            return spotifyService;
+        }
+
+        /**
+         * Returns a specific Spotify Album Instance by Id
+         * @param albumId
+         * @return spotifyAlbum
+         */
+        public Album getSpotifyAlbumById(String albumId){
+            SpotifyService spotifyService = getSpotifyService();
+            Album spotifyAlbum = spotifyService.getAlbum(albumId);
+            return spotifyAlbum;
+        }
+
+        /**
+         * Returns list of CardAlbum instances.
+         * @return
+         */
+        public List<CardAlbum> getNewReleasedAlbums(){
+            List<CardAlbum> cardAlbumList = new ArrayList<>();
+            String albumId = null;
+            String artistId = null;
+            String artistName = null;
+            String albumImageURL=null;
+            String albumName = null;
+            int albumPopularity;
+            String albumReleaseDate;
+
+            SpotifyService spotifyService = getSpotifyService();
+            if(spotifyService!=null) {
+                NewReleases newReleases = spotifyService.getNewReleases();
+                Pager<AlbumSimple> albumSimplePager = newReleases.albums;
+
+                //Getting the Album Name for CardAlbum
+                List<AlbumSimple> albumSimpleList = albumSimplePager.items;
+                for (AlbumSimple simpleAlbum : albumSimpleList) {
+                    albumId = simpleAlbum.id;
+                    albumName = simpleAlbum.name;
+
+                    //Getting the list of Album Artists for CardAlbum
+                    Album album = getSpotifyAlbumById(albumId);
+                    albumPopularity = album.popularity;
+                    albumReleaseDate = album.release_date;
+                    List<ArtistSimple> simpleArtistList = album.artists;
+                    for (ArtistSimple simpleArtist : simpleArtistList) {
+                        artistId = simpleArtist.id;
+                        artistName = simpleArtist.name;
+                    }
+                    //Getting the Album Image for CardAlbum
+                    //We want to fetch the url for the image with largest dimension.
+                    List<Image> albumImages = simpleAlbum.images;
+                    int maxWidth = 0;
+                    for (Image albumImage : albumImages) {
+                        if(albumImage.width > maxWidth)
+                            maxWidth = albumImage.width;
+                    }
+                    for(Image albumImage : albumImages){
+                        if (albumImage.width == maxWidth) {
+                            albumImageURL = albumImage.url;
+                        }
+                    }
+                    //Constructing the List of CardAlbumInstances
+                    if (simpleAlbum.name != null && albumImageURL != null && artistName !=null) {
+                        cardAlbumList.add(new CardAlbum(albumId,albumName,artistId,artistName,albumImageURL,albumPopularity,albumReleaseDate));
+                    }
+                }
+            }else{
+                Log.d("SpotifyNewRelease","Invalid Instance Of the SpotifyService");
+            }
+            return cardAlbumList;
+        }
     }
 }

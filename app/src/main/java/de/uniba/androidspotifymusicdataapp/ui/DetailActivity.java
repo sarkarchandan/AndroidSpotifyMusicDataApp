@@ -1,32 +1,31 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
-import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.uniba.androidspotifymusicdataapp.R;
 import de.uniba.androidspotifymusicdataapp.adapters.AlbumTrackAdapter;
 import de.uniba.androidspotifymusicdataapp.model.AlbumTrack;
-import de.uniba.androidspotifymusicdataapp.model.SpotifyAlbumDetail;
-import de.uniba.androidspotifymusicdataapp.model.SpotifyEngine;
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
-import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TrackSimple;
 
 public class DetailActivity extends AppCompatActivity {
-
-    //Enabling default logging at class level.
-    private static final Logger logger = Logger.getLogger(DetailActivity.class.getName());
 
     private static final String BUNDLE_EXTRA = "BUNDLE_EXTRA";
     private static final String EXTRA_ALBUM_ID = "EXTRA_ALBUM_ID";
@@ -39,36 +38,43 @@ public class DetailActivity extends AppCompatActivity {
     private List<AlbumTrack> albumTrackList;
     private RecyclerView recyclerView;
     private AlbumTrackAdapter albumTrackAdapter;
+    private ProgressBar load_detailactivity;
+    private TextView textView_textView_album_detail_album_name;
+    private TextView textView_textView_album_detail_artist_name;
+    private TextView textView_textView_album_detail_album_release_date;
+    private ImageView imageView_imageView_album_detail_image;
+    private Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        load_detailactivity = (ProgressBar) findViewById(R.id.load_detailactivity);
+        textView_textView_album_detail_album_name = (TextView)findViewById(R.id.textView_album_detail_album_name);
+        textView_textView_album_detail_artist_name = (TextView)findViewById(R.id.textView_album_detail_artist_name);
+        textView_textView_album_detail_album_release_date = (TextView)findViewById(R.id.textView_album_detail_album_release_date);
+        imageView_imageView_album_detail_image = (ImageView)findViewById(R.id.imageView_album_detail_image);
+        extras = getIntent().getBundleExtra(BUNDLE_EXTRA);
 
+        //Getting the Data for AlbumTracks
+        new SpotifyAlbum(extras.getString(EXTRA_ALBUM_ID),
+                extras.getString(EXTRA_SPOTIFY_ACCESS_TOKEN)).execute();
+    }
+
+    /**
+     *
+     * @param albumTracks
+     */
+    public void loadSelectedAlbum(List<AlbumTrack> albumTracks){
         try {
-            Bundle extras = getIntent().getBundleExtra(BUNDLE_EXTRA);
-
-            ImageView imageView_albumImage = (ImageView)findViewById(R.id.imageView_album_detail_image);
 
             //Picasso Experiment Begin
             Picasso.with(this).setLoggingEnabled(true);
-            Picasso.with(this).load(extras.getString(EXTRA_ALBUM_IMAGE)).into(imageView_albumImage);
+            Picasso.with(this).load(extras.getString(EXTRA_ALBUM_IMAGE)).into(imageView_imageView_album_detail_image);
             //Experiment Experiment End
-
-            ((TextView)findViewById(R.id.textView_album_detail_album_name)).setText(extras.getString(EXTRA_ALBUM_NAME));
-            ((TextView)findViewById(R.id.textView_album_detail_artist_name)).setText(extras.getString(EXTRA_ALBUM_ARTIST_NAME));
-            ((TextView)findViewById(R.id.textView_album_detail_album_release_date)).setText(extras.getString(EXTRA_ALBUM_RELEASE_DATE));
-            //Getting the Data for AlbumTracks
-            try {
-                albumTrackList = new SpotifyAlbumDetail(extras.getString(EXTRA_ALBUM_ID),
-                        extras.getString(EXTRA_SPOTIFY_ACCESS_TOKEN)).execute().get();
-            } catch (InterruptedException e) {
-                logger.log(Level.WARNING,"We have got Interrupted Exception"+e.getMessage());
-            } catch (ExecutionException e) {
-                logger.log(Level.WARNING,"We have got ExecutionException"+e.getMessage());
-            } catch (NullPointerException e){
-                logger.log(Level.WARNING,"We have received NUll List "+e.getMessage());
-            }
+            textView_textView_album_detail_album_name.setText(extras.getString(EXTRA_ALBUM_NAME));
+            textView_textView_album_detail_artist_name.setText(extras.getString(EXTRA_ALBUM_ARTIST_NAME));
+            textView_textView_album_detail_album_release_date.setText(extras.getString(EXTRA_ALBUM_RELEASE_DATE));
 
             recyclerView = (RecyclerView)findViewById(R.id.recyclerView_for_detail_activity_track_details);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,10 +82,112 @@ public class DetailActivity extends AppCompatActivity {
                 albumTrackAdapter = new AlbumTrackAdapter(albumTrackList,this);
             }
             recyclerView.setAdapter(albumTrackAdapter);
-
         }catch (NullPointerException nP){
-            logger.log(Level.WARNING,"we have encountered NullPointerException"+nP.getMessage());
+            Log.v("NullPointerException",nP.getMessage());
+        }
+    }
+
+    /**
+     * Class SpotifyAlbum is responsible for the background task for the DetailActivity.
+     * We instantiate the class SpotifyAlbum with the passing the Spotify Access Token and album Id to the constructor.
+     * Spotify Access Token and Album Id used by the background Task to generate the details information for the selected Spotify Album.
+     */
+    public class SpotifyAlbum extends AsyncTask<Void,Void,List<AlbumTrack>>{
+
+        private String spotifyAlbumId;
+        private String spotifyAccessToken;
+
+        /**
+         * Constructor for SpotifyAlbum
+         * @param spotifyAlbumId
+         * @param spotifyAccessToken
+         */
+        public SpotifyAlbum(String spotifyAlbumId, String spotifyAccessToken) {
+            this.spotifyAlbumId = spotifyAlbumId;
+            this.spotifyAccessToken = spotifyAccessToken;
+        }
+
+        /**
+         * Getter methods for the instance instance variables
+         */
+        public String getSpotifyAlbumId() {
+            return spotifyAlbumId;
+        }
+
+        public String getSpotifyAccessToken() {
+            return spotifyAccessToken;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            load_detailactivity.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected List<AlbumTrack> doInBackground(Void... voids) {
+            List<AlbumTrack> albumTrackList = new ArrayList<>();
+            albumTrackList = getAlbumTracks();
+            return albumTrackList;
+        }
+
+        @Override
+        protected void onPostExecute(List<AlbumTrack> albumTracks) {
+            super.onPostExecute(albumTracks);
+            load_detailactivity.setVisibility(View.INVISIBLE);
+            albumTrackList = albumTracks;
+            loadSelectedAlbum(albumTracks);
+        }
+
+        /**
+         * Returns an instance of the Spotify Service
+         * @return spotifyService
+         */
+        public SpotifyService getSpotifyService(){
+            //Creates and configures a REST adapter for Spotify Web API.
+            SpotifyApi wrapper = new SpotifyApi();
+            if(!getSpotifyAccessToken().equals("") && getSpotifyAccessToken()!=null) {
+                wrapper.setAccessToken(getSpotifyAccessToken());
+            }else{
+                Log.d("SpotifyAlbum","Invalid Access Token");
+            }
+            SpotifyService spotifyService = wrapper.getService();
+            return spotifyService;
+        }
+
+        /**
+         * Returns a list of AlbumTracks
+         * @return
+         */
+        public List<AlbumTrack> getAlbumTracks(){
+            List<AlbumTrack> albumTrackList = new ArrayList<>();
+            String trackId=null;
+            String trackName = null;
+            String trackDuration;
+            float trackPopularity;
+
+            try {
+                SpotifyService spotifyService = getSpotifyService();
+                Album spotifyAlbum = spotifyService.getAlbum(getSpotifyAlbumId());
+                Pager<TrackSimple> trackSimplePager = spotifyAlbum.tracks;
+                List<TrackSimple> simpleTrackList = trackSimplePager.items;
+                for (TrackSimple simpleTrack : simpleTrackList) {
+                    trackId = simpleTrack.id;
+                    trackName = simpleTrack.name;
+                    int seconds = (int) ((simpleTrack.duration_ms / 1000) % 60);
+                    int minutes = (int) ((simpleTrack.duration_ms / 1000) / 60);
+                    trackDuration = minutes+"."+seconds;
+                    Track spotifyTrack = spotifyService.getTrack(trackId);
+                    trackPopularity = ((float) (spotifyTrack.popularity/100.0)*5);
+                    albumTrackList.add(new AlbumTrack(trackId,trackName,trackDuration,trackPopularity));
+                }
+            }catch (NullPointerException nP){
+                Log.d("SpotifyAlbum",nP.getMessage());
+            }
+            return albumTrackList;
         }
 
     }
+
+
 }
