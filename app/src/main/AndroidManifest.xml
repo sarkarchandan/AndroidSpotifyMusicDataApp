@@ -22,9 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.DetailActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/CustomTheme"/>
+
         <activity android:name=".ui.ArtistActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/CustomTheme"></activity>
     </application>
 

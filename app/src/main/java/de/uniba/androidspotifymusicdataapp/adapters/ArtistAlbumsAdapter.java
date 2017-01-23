@@ -103,7 +103,7 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
             textView_artistAlbumName = (TextView)itemView.findViewById(R.id.albums_textView_artist_album_name);
             textView_artistAlbumreleaseDate = (TextView)itemView.findViewById(R.id.albums_textView_artist_album_release_date);
             ratingBar_artistAlbumPopularity = (RatingBar)itemView.findViewById(R.id.albums_ratingBar_artist_album_popularity);
-            viewContainer = itemView.findViewById(R.id.albums_linearLayout_outermost_container);
+            viewContainer = itemView.findViewById(R.id.cardview_album_item_container);
             viewContainer.setOnClickListener(this);
         }
 
@@ -113,7 +113,7 @@ public class ArtistAlbumsAdapter extends RecyclerView.Adapter<ArtistAlbumsAdapte
          */
         @Override
         public void onClick(View view) {
-            if(view.getId() == R.id.albums_linearLayout_outermost_container){
+            if(view.getId() == R.id.cardview_album_item_container){
                 itemClickCallBack.onItemClick(getAdapterPosition());
             }
         }

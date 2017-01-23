@@ -11,14 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
-import de.uniba.androidspotifymusicdataapp.custom.RoundRectTransformation;
 import de.uniba.androidspotifymusicdataapp.model.CardAlbum;
 import de.uniba.androidspotifymusicdataapp.R;
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 
 /**

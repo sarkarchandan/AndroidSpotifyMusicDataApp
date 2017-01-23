@@ -54,6 +54,7 @@ public class DetailActivity extends AppCompatActivity {
         textView_textView_album_detail_artist_name = (TextView)findViewById(R.id.textView_album_detail_artist_name);
         textView_textView_album_detail_album_release_date = (TextView)findViewById(R.id.textView_album_detail_album_release_date);
         imageView_imageView_album_detail_image = (ImageView)findViewById(R.id.imageView_album_detail_image);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView_for_detail_activity_track_details);
         extras = getIntent().getBundleExtra(BUNDLE_EXTRA);
 
         //Getting the Data for AlbumTracks
@@ -62,7 +63,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * This method loads a selected album either from the selected Card or from the selected album from the ArtistActivity.
      * @param albumTracks
      */
     public void loadSelectedAlbum(List<AlbumTrack> albumTracks){
@@ -76,7 +77,6 @@ public class DetailActivity extends AppCompatActivity {
             textView_textView_album_detail_artist_name.setText(extras.getString(EXTRA_ALBUM_ARTIST_NAME));
             textView_textView_album_detail_album_release_date.setText(extras.getString(EXTRA_ALBUM_RELEASE_DATE));
 
-            recyclerView = (RecyclerView)findViewById(R.id.recyclerView_for_detail_activity_track_details);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             if(albumTrackList.size() > 0){
                 albumTrackAdapter = new AlbumTrackAdapter(albumTrackList,this);
@@ -85,6 +85,30 @@ public class DetailActivity extends AppCompatActivity {
         }catch (NullPointerException nP){
             Log.v("NullPointerException",nP.getMessage());
         }
+    }
+
+    /**
+     * Hides all View elements until the page is loaded and shows the progress bar.
+     */
+    public void showProgress(){
+        load_detailactivity.setVisibility(View.VISIBLE);
+        textView_textView_album_detail_album_name.setVisibility(View.INVISIBLE);
+        textView_textView_album_detail_artist_name.setVisibility(View.INVISIBLE);
+        textView_textView_album_detail_album_release_date.setVisibility(View.INVISIBLE);
+        imageView_imageView_album_detail_image.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Once the values of all View elements are loaded hides the progress bar and shows the data.
+     */
+    public void showData(){
+        load_detailactivity.setVisibility(View.INVISIBLE);
+        textView_textView_album_detail_album_name.setVisibility(View.VISIBLE);
+        textView_textView_album_detail_artist_name.setVisibility(View.VISIBLE);
+        textView_textView_album_detail_album_release_date.setVisibility(View.VISIBLE);
+        imageView_imageView_album_detail_image.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -120,8 +144,7 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            load_detailactivity.setVisibility(View.VISIBLE);
+            showProgress();
         }
 
         @Override
@@ -133,10 +156,9 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<AlbumTrack> albumTracks) {
-            super.onPostExecute(albumTracks);
-            load_detailactivity.setVisibility(View.INVISIBLE);
             albumTrackList = albumTracks;
             loadSelectedAlbum(albumTracks);
+            showData();
         }
 
         /**

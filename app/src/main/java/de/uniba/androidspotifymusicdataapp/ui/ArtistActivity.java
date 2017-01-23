@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class ArtistActivity extends AppCompatActivity implements ArtistAlbumsAda
         textView_artist_detail_artistName = (TextView)findViewById(R.id.textView_artist_detail_artistName);
         textView_artist_detail_artist_genres = (TextView) findViewById(R.id.textView_artist_detail_artist_genres);
         ratingBar_artist_detail_artistPopularity = (RatingBar)findViewById(R.id.ratingBar_artist_detail_artistPopularity);
-
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_artist_detail_artist_albums);
         spotifyAccessToken = extras.getString(EXTRA_SPOTIFY_ACCESS_TOKEN);
         new SpotifyArtist(spotifyAccessToken, extras.getString(EXTRA_ALBUM_ARTIST_ID)).execute();
     }
@@ -92,8 +93,7 @@ public class ArtistActivity extends AppCompatActivity implements ArtistAlbumsAda
         ratingBar_artist_detail_artistPopularity.setRating(albumArtist.getArtistPopularity());
 
         try {
-            recyclerView = (RecyclerView) findViewById(R.id.recyclerView_artist_detail_artist_albums);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
             artistAlbumList = albumArtist.getArtistAlbumList();
             if (artistAlbumList.size() > 0) {
                 artistAlbumsAdapter = new ArtistAlbumsAdapter(artistAlbumList, this);
@@ -123,6 +123,30 @@ public class ArtistActivity extends AppCompatActivity implements ArtistAlbumsAda
         bundle.putString(EXTRA_SPOTIFY_ACCESS_TOKEN,getSpotifyAccessToken());
         intent.putExtra(BUNDLE_EXTRA,bundle);
         startActivity(intent);
+    }
+
+    /**
+     * Hides all View elements until the page is loaded and shows the progress bar.
+     */
+    public void showProgress(){
+        load_artistactivity.setVisibility(View.VISIBLE);
+        imageView_artist_detail_image.setVisibility(View.INVISIBLE);
+        textView_artist_detail_artistName.setVisibility(View.INVISIBLE);
+        textView_artist_detail_artist_genres.setVisibility(View.INVISIBLE);
+        ratingBar_artist_detail_artistPopularity.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Once the values of all View elements are loaded hides the progress bar and shows the data.
+     */
+    public void showData(){
+        load_artistactivity.setVisibility(View.INVISIBLE);
+        imageView_artist_detail_image.setVisibility(View.VISIBLE);
+        textView_artist_detail_artistName.setVisibility(View.VISIBLE);
+        textView_artist_detail_artist_genres.setVisibility(View.VISIBLE);
+        ratingBar_artist_detail_artistPopularity.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -160,8 +184,7 @@ public class ArtistActivity extends AppCompatActivity implements ArtistAlbumsAda
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            load_artistactivity.setVisibility(View.VISIBLE);
+            showProgress();
         }
 
         @Override
@@ -172,10 +195,9 @@ public class ArtistActivity extends AppCompatActivity implements ArtistAlbumsAda
 
         @Override
         protected void onPostExecute(AlbumArtist albumArtist) {
-            super.onPostExecute(albumArtist);
-            load_artistactivity.setVisibility(View.INVISIBLE);
             albumArtistData = albumArtist;
             loadSelectedArtist(albumArtist);
+            showData();
         }
 
 
