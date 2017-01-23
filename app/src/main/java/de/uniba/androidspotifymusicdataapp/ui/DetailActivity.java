@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView textView_textView_album_detail_artist_name;
     private TextView textView_textView_album_detail_album_release_date;
     private ImageView imageView_imageView_album_detail_image;
+    private Toolbar toolbar;
     private Bundle extras;
 
     @Override
@@ -55,6 +57,9 @@ public class DetailActivity extends AppCompatActivity {
         textView_textView_album_detail_album_release_date = (TextView)findViewById(R.id.textView_album_detail_album_release_date);
         imageView_imageView_album_detail_image = (ImageView)findViewById(R.id.imageView_album_detail_image);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView_for_detail_activity_track_details);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_detail_activity);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         extras = getIntent().getBundleExtra(BUNDLE_EXTRA);
 
         //Getting the Data for AlbumTracks

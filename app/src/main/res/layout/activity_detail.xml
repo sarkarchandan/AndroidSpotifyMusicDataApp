@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/activity_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundColorBright"
         tools:context="de.uniba.androidspotifymusicdataapp.ui.DetailActivity">
+
+    <include android:id="@+id/toolbar_detail_activity"
+        layout="@layout/background_toolbar">
+
+    </include>
 
         <ProgressBar
             android:layout_width="42dp"
@@ -24,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:scaleType="centerCrop"
-            android:background="@color/backgroundColorBright"
             android:id="@+id/imageView_album_detail_image"/>
 
         <TextView
@@ -75,7 +76,6 @@
         </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
-</ScrollView>
 
 
 

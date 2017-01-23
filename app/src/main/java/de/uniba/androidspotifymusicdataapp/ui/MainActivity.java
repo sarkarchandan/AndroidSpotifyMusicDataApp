@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     private CardAdapter cardAdapter;
     private List<CardAlbum> cardAlbumListData;
     private ProgressBar loadMainActivity;
+    private Toolbar toolbar_main_activity;
 
 
     /**
@@ -76,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadMainActivity = (ProgressBar) findViewById(R.id.load_mainactivity);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_for_main_activity);
+        toolbar_main_activity = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(toolbar_main_activity);
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder
                 (clientId, AuthenticationResponse.Type.TOKEN, redirectUri);
         AuthenticationRequest request = builder.build();
@@ -102,12 +107,26 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     }
 
     /**
+     * Hides all View elements until the page is loaded and shows the progress bar.
+     */
+    public void showProgress(){
+        loadMainActivity.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Once the values of all View elements are loaded hides the progress bar and shows the data.
+     */
+    public void showData(){
+        loadMainActivity.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * Set the adapter for the MainActivity RecyclerView with data.
      * @param cardAlbumList
      */
     public void loadSpotifyNewReleaseData(List<CardAlbum> cardAlbumList){
-        loadMainActivity.setVisibility(View.INVISIBLE);
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_for_main_activity);
         //Setting the LayoutManager for the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //Instantiating CardAdapter class using the defined constructor
@@ -142,12 +161,16 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItmId = item.getItemId();
-        Context context = MainActivity.this;
-        if(selectedItmId == R.id.item_action_refresh){
-            loadSpotifyNewReleaseData(cardAlbumListData);
-            return true;
-        }else{
-            return super.onOptionsItemSelected(item);
+
+        switch (selectedItmId){
+            case (R.id.item_action_refresh):
+                new SpotifyNewRelease(accessToken).execute();
+                return true;
+            case (R.id.find_web):
+                Toast.makeText(MainActivity.this,"Find In Web Selected",Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -219,8 +242,7 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            loadMainActivity.setVisibility(View.VISIBLE);
+            showProgress();
         }
 
         @Override
@@ -231,9 +253,9 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
 
         @Override
         protected void onPostExecute(List<CardAlbum> cardAlbumList) {
-            super.onPostExecute(cardAlbumList);
             cardAlbumListData = cardAlbumList;
             loadSpotifyNewReleaseData(cardAlbumList);
+            showData();
         }
 
         /**
