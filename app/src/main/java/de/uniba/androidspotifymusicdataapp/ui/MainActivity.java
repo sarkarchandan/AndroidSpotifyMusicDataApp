@@ -1,6 +1,5 @@
 package de.uniba.androidspotifymusicdataapp.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import de.uniba.androidspotifymusicdataapp.R;
 import de.uniba.androidspotifymusicdataapp.adapters.CardAdapter;
 import de.uniba.androidspotifymusicdataapp.model.CardAlbum;
@@ -34,10 +32,19 @@ import kaaes.spotify.webapi.android.models.Pager;
 
 public class MainActivity extends AppCompatActivity implements CardAdapter.CardClickCallBack{
 
-    //Setting the Client ID for authentication.
-    private static final String clientId = "973f03d1cf7b412eabf015fa6fa66b23";
-    //Setting the Redirect URI for authentication.
-    private static final String redirectUri = "spotify-meta-data-on-android://callback";
+    /*
+     * The following two parameters are specific to the user' registered application with Spotify.
+     * In order to execute this app, user needs to register with free account with Spotify and register one
+     * application. Then the Android Authentication Guide must be followed to generate the Client Id and Redirect Uri.
+     * These two values are required to generate the Authentication Token which is required to fetch data from the Spotify Web Api
+     * android wrapper.
+     */
+    /*Your Client id goes here*/
+    private static final String clientId = "##########";
+    /*Your Redirect Uri goes here*/
+    private static final String redirectUri = "##########";
+
+
     //Setting the Request Code to verify if the result comes from the correct activity.
     private static final int request_Code = 1337;
     //Setting private variable for storing the Access Token
