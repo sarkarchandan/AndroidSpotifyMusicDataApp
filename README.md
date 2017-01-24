@@ -12,8 +12,14 @@
  
 
 ## Authentication
-#### [Spotify Android SDK Authentication Guide](https://developer.spotify.com/technologies/spotify-android-sdk/android-sdk-authentication-guide/) has been followed to handle the authentication and generate the access token. We have registered with Spotify prior to the design of the application. Spotify Android-SDK supports two ways to deal with the authentication such as single-sign-on with native Spotify client and fallback strategy with the help of default android WebView. This app can be executed in either of authentication procedures. User needs to register with Spotify and create own application. Then as per the Spotify Android Authentication Guide, user needs to create Client Id and Redirect Uri which should be unique for each application registered with Spotify. Client Id and Redirect Uri are required for user to authenticate and generate an access token which will later be used in the app to fetch data from Spotify.
-
+#### [Spotify Android SDK Authentication Guide](https://developer.spotify.com/technologies/spotify-android-sdk/android-sdk-authentication-guide/) has been followed to handle the authentication and generate the access token. We have registered with Spotify prior to the design of the application. Spotify Android-SDK supports two ways to deal with the authentication such as single-sign-on with native Spotify client and fallback strategy with the help of default android WebView. This app can be executed in either of authentication procedures. User needs to register with Spotify and create own application. Then as per the Spotify Android Authentication Guide, user needs to create Client Id and Redirect Uri which should be unique for each application registered with Spotify. Client Id and Redirect Uri are required for user to authenticate and generate an access token which will later be used in the app to fetch data from Spotify
+#### Once the Client Id and the Redirect Uri have been obtained, post registering the application with the Spotify, user needs to place them as the values for the below mentioned constants defined in the MainActivity.java.
+```
+/*Your Client id goes here*/
+private static final String clientId = "##########";
+/*Your Redirect Uri goes here*/
+private static final String redirectUri = "##########";
+```
 ### Ongoing Work
 - Further optimise the application for better performance and efficiency.
 - Adhere to the Material Design guidelines to improve the user interface.
