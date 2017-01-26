@@ -24,7 +24,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="360dp"
             android:scaleType="centerCrop"
             android:id="@+id/imageView_album_detail_image"/>
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView_album_detail_artist_name"
             android:layout_below="@+id/textView_album_detail_album_name"
-            android:fontFamily="sans-serif"
+            android:fontFamily="monospace"
             android:textColor="@color/textColorDark"
             android:elevation="14dp"
             android:textSize="14sp"
@@ -47,10 +47,10 @@
             android:layout_marginBottom="2dp"
             android:id="@+id/textView_album_detail_album_name"
             android:layout_below="@+id/imageView_album_detail_image"
-            android:fontFamily="sans-serif"
+            android:fontFamily="monospace"
             android:textColor="@color/textColorDark"
             android:elevation="14dp"
-            android:textSize="34sp"
+            android:textSize="24sp"
             android:paddingLeft="4dp"/>
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_below="@+id/textView_album_detail_artist_name"
             android:textColor="@color/textColorDark"
             android:elevation="14dp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="monospace"
             android:textSize="14sp"
             android:paddingLeft="4dp"
             />

@@ -30,7 +30,7 @@
         android:fontFamily="monospace"
         android:textColor="@color/textColorDark"
         android:elevation="14dp"
-        android:textSize="34sp"
+        android:textSize="24sp"
         android:paddingLeft="4dp"/>
 
     <TextView

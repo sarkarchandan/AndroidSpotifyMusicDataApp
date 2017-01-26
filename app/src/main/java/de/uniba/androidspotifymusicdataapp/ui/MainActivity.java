@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.CardC
      * android wrapper.
      */
     /*Your Client id goes here*/
-    private static final String clientId = "##########";
+    private static final String clientId = "973f03d1cf7b412eabf015fa6fa66b23";
     /*Your Redirect Uri goes here*/
-    private static final String redirectUri = "##########";
+    private static final String redirectUri = "spotify-meta-data-on-android://callback";
 
 
     //Setting the Request Code to verify if the result comes from the correct activity.
